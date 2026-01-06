@@ -59,3 +59,52 @@
            PERFORM MAIN-LOOP UNTIL WS-CONTINUE = 'N'
            PERFORM SHUTDOWN-SEQUENCE
            STOP RUN.
+
+       DISPLAY-BANNER.
+           DISPLAY "======================================"
+           DISPLAY "   SECURE MORTGAGE CALCULATOR"
+           DISPLAY "   DEFENSING PROGRAMING ENABLED"
+           DISPLAY "======================================"
+           DISPLAY " ".
+       
+       MAIN-LOOP.
+           MOVE ZERO TO WS-ATTEMPT-COUNTER
+           MOVE 'N' TO WS-VALID-INPUT
+
+           PERFORM GET-LOAN-AMOUNT
+           PERFORM GET-INTEREST-RATE
+           PERFORM GET-LOAN-YEARS
+
+           IF WS-VALID-INPUT = 'Y' THEN 
+               PERFORM CALCULATE-MORTGAGE
+               PERFORM DISPLAY-RESULTS
+           END-IF 
+
+           PERFORM ASK-CONTINUE.
+       
+       GET-LOAN-AMOUNT.
+           PERFORM UNTIL WS-VALID-INPUT = 'Y'
+                   OR WS-ATTEMPT-COUNTER >= WS-MAX-ATTEMPTS
+               DISPLAY " "
+               DISPLAY "Enter Loan Amount (Max: 9999999999.99): "
+               ACCEPT WS-INPUT-AMOUNT
+
+               ADD 1 TO WS-ATTEMPT-COUNTER
+
+               PERFORM VALIDATE-LOAN-AMOUNT
+
+               IF WS-VALID-INPUT = 'N' THEN 
+                   DISPLAY "ERROR: Invalid loan amount. Try again."
+                   IF WS-ATTEMPT-COUNTER >= WS-MAX-ATTEMPTS THEN 
+                       DISPLAY "SECURITY: Max attempts reached."
+                       MOVE 'E001' TO WS-ERROR-CODE
+                       PERFORM LOG-SECURITY-EVENT
+                       MOVE 'N' TO WS-CONTINUE
+                   END-IF
+               END-IF
+           END-PERFORM.    
+
+       VALIDATE-LOAN-AMOUNT.
+           MOVE 'Y' TO WS-VALID-INPUT
+      
+      
