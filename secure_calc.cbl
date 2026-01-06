@@ -28,4 +28,34 @@
        01 WS-TOTAL-PAID            PIC 9(12)V99 VALUE ZERO.
        01 WS-TOTAL-INTEREST        PIC 9(12)V99 VALUE ZERO.
        
+      * INPUT VARIABLES WITH BOUNDARY CHECKS
+       01 WS-INPUT-AMOUNT          PIC X(15).
+       01 WS-INPUT-RATE            PIC X(10).
+       01 WS-INPUT-YEARS           PIC X(5).
+      
+      * VALIDATION FLAGS
+       01 WS-VALID-INPUT           PIC X VALUE 'N'.
+       01 WS-CONTINUE              PIC X VALUE 'Y'.
+       01 WS-RETRY                 PIC X VALUE ' '.
+
+      * SECURITY AUDIT TRAIL
+       01 WS-ATTEMPT-COUNTER       PIC 9(3) VALUE ZERO.
+       01 WS-MAX-ATTEMPTS          PIC 9(3) VALUE 5.
+       01 WS-ERROR-CODE            PIC X(4).
        
+      * DISPLAY FORMATIING
+       01 WS-DISPLAY-AMOUNT        PIC $,$$$,$$$,$$9.99.
+       01 WS-DISPLAY-PAYMENT       PIC $,$$$,$$$,$$9.99.
+       01 WS-DISPLAY-TOTAL         PIC $,$$$,$$$,$$9.99.
+       01 WS-DISPLAY-INTEREST      PIC $,$$$,$$$,$$9.99.
+       01 WS-DISPLAY-RATE          PIC ZZ9.9999.
+
+      * LOOP COUNTERS FOR POWER CALCULATION
+       01 WS-LOOP-CTR              PIC 9(4) VALUE ZERO.
+
+       PROCEDURE DIVISION.
+       MAIN-PROCEDURE.
+           PERFORM DISPLAY-BANNER
+           PERFORM MAIN-LOOP UNTIL WS-CONTINUE = 'N'
+           PERFORM SHUTDOWN-SEQUENCE
+           STOP RUN.
