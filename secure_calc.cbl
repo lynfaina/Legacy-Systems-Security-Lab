@@ -137,7 +137,7 @@
 
            PERFORM UNTIL WS-VALID-INPUT = 'Y'
                     OR WS-ATTEMPT-COUNTER >= WS-MAX-ATTEMPTS
-               DISPLAY "Enter Annual Interest Rate (e.g., 3.5): "
+               DISPLAY "Enter Annual Interest Rate (e.g., 3.5-): "
                ACCEPT WS-INPUT-RATE 
 
                ADD 1 TO WS-ATTEMPT-COUNTER
