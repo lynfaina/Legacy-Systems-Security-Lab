@@ -107,4 +107,50 @@
        VALIDATE-LOAN-AMOUNT.
            MOVE 'Y' TO WS-VALID-INPUT
       
-      
+      * CHECK FOR EMPTY INPUT
+           IF WS-INPUT-AMOUNT = SPACES THEN 
+               MOVE 'N' TO WS-VALID-INPUT
+           END-IF
+
+      * CHECK FOR NON-NUMERIC CHARACTERS (PREVENT INJECTION)
+           INSPECT WS-INPUT-AMOUNT REPLACING ALL ";" BY " "       
+           INSPECT WS-INPUT-AMOUNT REPLACING ALL "'" BY " "       
+           INSPECT WS-INPUT-AMOUNT REPLACING ALL '"' BY " "       
+           INSPECT WS-INPUT-AMOUNT REPLACING ALL "-" BY " "      
+
+           IF FUNCTION TEST-NUMVAL(WS-INPUT-AMOUNT) = 0 THEN 
+               COMPUTE WS-LOAN-AMOUNT =
+                   FUNCTION NUMVAL(WS-INPUT-AMOUNT) 
+
+      * BOUNDARY VALIDATION (PREVENT OVERFLOW)
+               IF WS-LOAN-AMOUNT <= 0 OR
+                  WS-LOAN-AMOUNT > 9999999999.99 THEN 
+                   MOVE 'N' TO WS-VALID-INPUT
+               END-IF 
+           ELSE 
+               MOVE 'N' TO WS-VALID-INPUT
+           END-IF.
+
+       GET-INTEREST-RATE.
+           MOVE 'N' TO WS-VALID-INPUT
+           MOVE ZERO TO WS-ATTEMPT-COUNTER
+
+           PERFORM UNTIL WS-VALID-INPUT = 'Y'
+                    OR WS-ATTEMPT-COUNTER >= WS-MAX-ATTEMPTS
+               DISPLAY "Enter Annual Interest Rate (e.g., 3.5): "
+               ACCEPT WS-INPUT-RATE 
+
+               ADD 1 TO WS-ATTEMPT-COUNTER
+               
+               PERFORM VALIDATE-INTEREST-RATE
+
+               IF WS-VALID-INPUT = 'N' THEN 
+                   DISPLAY "ERROR: Invalid interest rate. Try again."
+                   IF WS-ATTEMPT-COUNTER >= WS-MAX-ATTEMPTS THEN 
+                       DISPLAY "SECURITY: Max attemps reached."
+                       MOVE 'E002' TO WS-ERROR-CODE
+                       PERFORM LOG-SECURITY-EVENT
+                       MOVE 'N' TO WS-CONTINUE 
+                   END-IF
+               END-IF
+           END-PERFORM.
