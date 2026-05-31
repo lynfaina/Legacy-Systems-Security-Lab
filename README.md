@@ -96,35 +96,6 @@ cobc -x -o mortgage MortgageCalculator.cob
 
 The program rejects unsafe input and re-prompts rather than processing it:
 
-```
-Enter Loan Amount (Max: 9999999999.99):
-abc123
-ERROR: Invalid loan amount. Try again.
-
-Enter Loan Amount (Max: 9999999999.99):
--50000
-ERROR: Invalid loan amount. Try again.
-
-Enter Loan Amount (Max: 9999999999.99):
-200000
-Enter Annual Interest Rate (e.g., 3.5):
-6
-Enter Loan Term in Years (1-30):
-30
-
-=====================================
-    MORTGAGE CALCULATION RESULTS
-=====================================
-Loan Amount     :      $200,000.00
-Annual Rate     :   6.0000%
-Term            : 30 years
-------------------------------------
-Monthly Payment :        $1,199.10
-Total Paid      :      $431,676.00
-Total Interest  :      $231,676.00
-=====================================
-```
-
 ![Input validation rejecting bad input, then a successful calculation](screenshots/validation-demo.png)
 
 ![Security audit event triggered after five failed attempts](screenshots/security-audit-lockout.png)
