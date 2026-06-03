@@ -42,7 +42,7 @@
       * VALIDATION FLAGS
        01 WS-VALID-INPUT           PIC X VALUE 'N'.
        01 WS-CONTINUE              PIC X VALUE 'Y'.
-       01 WS-RETRY                 PIC X VALUE ' '.
+       01 WS-RETRY                 PIC X(10) VALUE SPACES.
 
       * SECURITY AUDIT TRAIL
        01 WS-ATTEMPT-COUNTER       PIC 9(3) VALUE ZERO.
@@ -187,7 +187,7 @@
 
            PERFORM UNTIL WS-VALID-INPUT = 'Y'
                     OR WS-ATTEMPT-COUNTER >= WS-MAX-ATTEMPTS
-               DISPLAY "Enter Annual Interest Rate (e.g., 3.5): "
+               DISPLAY "Enter Annual Interest Rate (e.g., 3.5-): "
                ACCEPT WS-INPUT-RATE 
 
                ADD 1 TO WS-ATTEMPT-COUNTER
@@ -413,25 +413,28 @@
            DISPLAY "***************************"
            DISPLAY " ".
 
-       ASK-CONTINUE.
-           DISPLAY "Calculate another mortgage? (Y/N): "
-           ACCEPT WS-RETRY 
-
-      * FORCE UPPERCASE FOR COMPARISON
-           IF WS-RETRY = 'y' THEN MOVE 'Y' TO WS-RETRY END-IF 
-           IF WS-RETRY = 'n' THEN MOVE 'N' TO WS-RETRY END-IF 
-
-           IF WS-RETRY = 'Y' THEN 
-               MOVE 'Y' TO WS-CONTINUE
-           ELSE 
-               MOVE 'N' TO WS-CONTINUE 
-           END-IF.
+        ASK-CONTINUE.
+           MOVE SPACE TO WS-CONTINUE
+           PERFORM UNTIL WS-CONTINUE = 'Y' OR WS-CONTINUE = 'N'
+               DISPLAY "Calculate another mortgage? (Y/N): "
+                   WITH NO ADVANCING
+               ACCEPT WS-RETRY
+               IF FUNCTION UPPER-CASE(FUNCTION TRIM(WS-RETRY)) = 'Y'
+                   MOVE 'Y' TO WS-CONTINUE
+               ELSE
+                   IF FUNCTION UPPER-CASE(FUNCTION TRIM(WS-RETRY)) = 'N'
+                       MOVE 'N' TO WS-CONTINUE
+                   ELSE
+                       DISPLAY "Invalid choice. Please enter Y or N."
+                   END-IF
+               END-IF
+           END-PERFORM.
 
        SHUTDOWN-SEQUENCE.
            DISPLAY " "
            DISPLAY "======================================"
            DISPLAY "   SESSION ENDED SECURELY"
-           DISPLAY "   All inputes sanitized and logged."
+           DISPLAY "   All inputs sanitized and logged."
            DISPLAY "======================================"
            DISPLAY " ".
        
