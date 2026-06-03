@@ -76,6 +76,8 @@ Fixed-precision numeric fields (`PIC` clauses with defined decimal places) are u
 
 When validation fails repeatedly, the program logs a security audit event with an error code (`E001`–`E003`), the number of attempts made, and exits safely rather than continuing in an unknown state.
 
+The validation layer acts as the protective boundary for the calculation engine. In legacy banking systems, a single unvalidated field can propagate corrupt data downstream — a truncated principal writes a wrong balance to the ledger, a non-numeric value crashes a batch job mid-run, and a divide-by-zero aborts processing entirely. By rejecting malformed input at entry, the hardened module ensures only sane, bounded, correctly-typed data reaches the computation and any record it produces. The infrastructure protected is therefore the integrity of the financial computation itself and the records derived from it.
+
 ---
 
 ## How to build and run
@@ -122,7 +124,7 @@ The program rejects unsafe input and re-prompts rather than processing it:
 - [x] Core calculator implemented
 - [x] Input validation and sanitization
 - [x] Security audit logging
-- [ ] Insecure "before" version for side-by-side comparison
+- [x] Insecure "before" version for side-by-side comparison
 - [ ] AWS deployment
 
 ## License
