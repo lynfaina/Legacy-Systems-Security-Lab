@@ -26,10 +26,10 @@
        01 WS-RETRY                  PIC X VALUE SPACE.
 
       * Display-formatted copies for output
-       01 WS-DISPLAY-AMOUNT         PIC Z,ZZZ,ZZ9.99.
-       01 WS-DISPLAY-PAYMENT        PIC Z,ZZZ,ZZ9.99.
-       01 WS-DISPLAY-TOTAL          PIC Z,ZZZ,ZZ9.99.
-       01 WS-DISPLAY-INTEREST       PIC Z,ZZZ,ZZ9.99.
+       01 WS-DISPLAY-AMOUNT         PIC $,$$$,$$$,$$$,$$9.99.
+       01 WS-DISPLAY-PAYMENT        PIC $,$$$,$$$,$$$,$$9.99.
+       01 WS-DISPLAY-TOTAL          PIC $,$$$,$$$,$$$,$$9.99.
+       01 WS-DISPLAY-INTEREST       PIC $,$$$,$$$,$$$,$$9.99.
        01 WS-DISPLAY-RATE           PIC Z9.9999.
 
        PROCEDURE DIVISION.

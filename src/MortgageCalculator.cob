@@ -20,7 +20,6 @@
        01 WS-LOAN-AMOUNT           PIC 9(10)V99 VALUE ZERO.
        01 WS-ANNUAL-RATE           PIC 9(2)V9(4) VALUE ZERO.
        01 WS-LOAN-YEARS            PIC 9(2) VALUE ZERO.
-       01 WS-DISPLAY-YEARS         PIC Z9 VALUE ZERO.
        01 WS-MONTHLY-PAYMENT       PIC 9(8)V99 VALUE ZERO.
        01 WS-MONTHLY-RATE          PIC 9V9(8) VALUE ZERO.
        01 WS-NUM-PAYMENTS          PIC 9(4) VALUE ZERO.
@@ -50,11 +49,11 @@
        01 WS-ERROR-CODE            PIC X(4).
        
       * DISPLAY FORMATIING
-       01 WS-DISPLAY-AMOUNT        PIC $,$$$,$$$,$$9.99.
-       01 WS-DISPLAY-PAYMENT       PIC $,$$$,$$$,$$9.99.
-       01 WS-DISPLAY-TOTAL         PIC $,$$$,$$$,$$9.99.
-       01 WS-DISPLAY-INTEREST      PIC $,$$$,$$$,$$9.99.
-       01 WS-DISPLAY-RATE          PIC ZZ9.9999.
+       01 WS-DISPLAY-AMOUNT        PIC $,$$$,$$$,$$$,$$9.99.
+       01 WS-DISPLAY-PAYMENT       PIC $,$$$,$$$,$$$,$$9.99.
+       01 WS-DISPLAY-TOTAL         PIC $,$$$,$$$,$$$,$$9.99.
+       01 WS-DISPLAY-INTEREST      PIC $,$$$,$$$,$$$,$$9.99.
+       01 WS-DISPLAY-RATE          PIC Z9.9999.
 
       * LOOP COUNTERS FOR POWER CALCULATION
        01 WS-LOOP-CTR              PIC 9(4) VALUE ZERO.
@@ -101,6 +100,7 @@
                    OR WS-ATTEMPT-COUNTER >= WS-MAX-ATTEMPTS
                DISPLAY " "
                DISPLAY "Enter Loan Amount (Max: 9999999999.99): "
+                    WITH NO ADVANCING
                ACCEPT WS-INPUT-AMOUNT
 
                ADD 1 TO WS-ATTEMPT-COUNTER
@@ -187,7 +187,8 @@
 
            PERFORM UNTIL WS-VALID-INPUT = 'Y'
                     OR WS-ATTEMPT-COUNTER >= WS-MAX-ATTEMPTS
-               DISPLAY "Enter Annual Interest Rate (e.g., 3.5-): "
+               DISPLAY "Enter Annual Interest Rate (e.g., 3.5): "
+                    WITH NO ADVANCING
                ACCEPT WS-INPUT-RATE 
 
                ADD 1 TO WS-ATTEMPT-COUNTER
@@ -266,8 +267,8 @@
 
            PERFORM UNTIL WS-VALID-INPUT = 'Y'
                     OR WS-ATTEMPT-COUNTER >= WS-MAX-ATTEMPTS
-               DISPLAY " "
                DISPLAY "Enter Loan Term in Years (1-30): "
+                    WITH NO ADVANCING
                ACCEPT WS-INPUT-YEARS 
 
                ADD 1 TO WS-ATTEMPT-COUNTER 
@@ -396,8 +397,7 @@
            DISPLAY "====================================="
            DISPLAY "Loan Amount     : " WS-DISPLAY-AMOUNT
            DISPLAY "Annual Rate     : " WS-DISPLAY-RATE "%"
-           MOVE WS-LOAN-YEARS TO WS-DISPLAY-YEARS
-           DISPLAY "Term            : " WS-DISPLAY-YEARS " years"
+           DISPLAY "Term            : " WS-NUM-PAYMENTS " months"
            DISPLAY "------------------------------------"
            DISPLAY "Monthly Payment : " WS-DISPLAY-PAYMENT
            DISPLAY "Total Paid      : " WS-DISPLAY-TOTAL
