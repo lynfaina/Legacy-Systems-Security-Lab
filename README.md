@@ -116,8 +116,6 @@ The program rejects unsafe input and re-prompts rather than processing it:
 
 ## Test cases
 
-## Test cases
-
 | Input | Field | Vulnerable Version | Hardened Version |
 |-------|-------|--------------------|------------------|
 | _(empty)_ | any | Accepted as zero | Rejected |
