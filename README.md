@@ -74,9 +74,9 @@ Valid input ranges enforced:
 
 Fixed-precision numeric fields (`PIC` clauses with defined decimal places) are used throughout to keep financial calculations accurate and avoid floating-point rounding drift.
 
-When validation fails repeatedly, the program logs a security audit event with an error code (`E001`–`E003`), the number of attempts made, and exits safely rather than continuing in an unknown state.
+When validation fails repeatedly, the program logs a security audit event with an error code (`E001`-`E003`), the number of attempts made, and exits safely rather than continuing in an unknown state.
 
-The validation layer acts as the protective boundary for the calculation engine. In legacy banking systems, a single unvalidated field can propagate corrupt data downstream — a truncated principal writes a wrong balance to the ledger, a non-numeric value crashes a batch job mid-run, and a divide-by-zero aborts processing entirely. By rejecting malformed input at entry, the hardened module ensures only sane, bounded, correctly-typed data reaches the computation and any record it produces. The infrastructure protected is therefore the integrity of the financial computation itself and the records derived from it.
+The validation layer acts as the protective boundary for the calculation engine. In legacy banking systems, a single unvalidated field can propagate corrupt data downstream; a truncated principal writes a wrong balance to the ledger, a non-numeric value crashes a batch job mid-run, and a divide-by-zero aborts processing entirely. By rejecting malformed input at entry, the hardened module ensures only sane, bounded, correctly-typed data reaches the computation and any record it produces. The infrastructure protected is therefore the integrity of the financial computation itself and the records derived from it.
 
 ---
 
@@ -84,12 +84,22 @@ The validation layer acts as the protective boundary for the calculation engine.
 
 Requires [GnuCOBOL](https://gnucobol.sourceforge.io/).
 
-```bash
-# Compile (fixed-format source)
-cobc -x -o mortgage MortgageCalculator.cob
+Both programs are fixed-format COBOL. Compile with `-x` to produce a
+standalone executable named after the source file.
 
-# Run
-./mortgage
+### Windows (cmd)
+```cmd
+cobc -x MortgageCalculator.cob
+MortgageCalculator.exe
+
+cobc -x MortgageCalculatorVulnerable.cob
+MortgageCalculatorVulnerable.exe
+```
+
+### Linux / macOS / MSYS2
+```bash
+cobc -x MortgageCalculator.cob && ./MortgageCalculator
+cobc -x MortgageCalculatorVulnerable.cob && ./MortgageCalculatorVulnerable
 ```
 
 ---
@@ -106,16 +116,18 @@ The program rejects unsafe input and re-prompts rather than processing it:
 
 ## Test cases
 
-| Input | Field | Expected result |
-|-------|-------|-----------------|
-| _(empty)_ | any | Rejected |
-| `-50000` | amount | Rejected (negative) |
-| `abc123` | amount | Rejected (non-numeric) |
-| `99999999999999` | amount | Rejected (too long / overflow) |
-| `'; DROP TABLE` | any | Rejected (invalid characters) |
-| `35` | rate | Rejected (exceeds 30% cap) |
-| `50` | years | Rejected (exceeds 30-year cap) |
-| `200000` / `6` / `30` | all | Accepted → calculates correctly |
+## Test cases
+
+| Input | Field | Vulnerable Version | Hardened Version |
+|-------|-------|--------------------|------------------|
+| _(empty)_ | any | Accepted as zero | Rejected |
+| `-50000` | amount | Accepted / mishandled | Rejected (negative) |
+| `abc123` | amount | Accepted as garbage | Rejected (non-numeric) |
+| `99999999999999` | amount | Silently truncated | Rejected (too long / overflow) |
+| `'; DROP TABLE` | any | Accepted as text | Rejected (invalid characters) |
+| `35` | rate | Accepted, computes | Rejected (exceeds 30% cap) |
+| `50` | years | Accepted, computes | Rejected (exceeds 30-year cap) |
+| `200000` / `6` / `30` | all | Accepted → calculates | Accepted → calculates correctly |
 
 ---
 
