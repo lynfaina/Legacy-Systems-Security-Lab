@@ -1,8 +1,8 @@
-# Legacy Systems Security Lab — Secure Mortgage Calculator
+# Legacy Systems Security Lab - Secure Mortgage Calculator
 
 A COBOL financial module that demonstrates how **input-validation vulnerabilities** occur in legacy banking systems, and how **defensive programming** mitigates them.
 
-The program is a working mortgage calculator on the surface. Its real purpose is to show how a hardened legacy system safely handles untrusted user input — rejecting, sanitizing, and logging bad data instead of trusting it.
+The program is a working mortgage calculator on the surface. Its real purpose is to show how a hardened legacy system safely handles untrusted user input; rejecting, sanitizing, and logging bad data instead of trusting it.
 
 > **Author:** Angeline Nicole Faina
 > **Language:** COBOL (compiled with GnuCOBOL)
@@ -16,11 +16,11 @@ Legacy banking systems are frequently written in COBOL and predate modern securi
 
 This project recreates a realistic financial routine and then defends it against the input-handling failures that legacy systems are prone to:
 
-- **Injection** — malicious characters or commands embedded in input
-- **Buffer overflow** — input longer than the field is sized to hold
-- **Invalid / malformed data** — empty, non-numeric, or negative values
-- **Numeric overflow** — values too large for the calculation to handle
-- **Precision errors** — incorrect rounding or truncation in financial math
+- **Injection** - malicious characters or commands embedded in input
+- **Buffer overflow** - input longer than the field is sized to hold
+- **Invalid / malformed data** - empty, non-numeric, or negative values
+- **Numeric overflow** - values too large for the calculation to handle
+- **Precision errors** - incorrect rounding or truncation in financial math
 
 The guiding principle throughout: **never trust input. Prove it is safe before converting it to a number.**
 
