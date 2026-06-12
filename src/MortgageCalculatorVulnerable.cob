@@ -98,7 +98,6 @@
         SHUTDOWN-SEQUENCE.
            DISPLAY " "
            DISPLAY "======================================"
-           DISPLAY "   SESSION ENDED SECURELY"
-           DISPLAY "   All inputs sanitized and logged."
+           DISPLAY "   SESSION ENDED"
            DISPLAY "======================================"
            DISPLAY " ".

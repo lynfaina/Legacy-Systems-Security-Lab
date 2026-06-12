@@ -68,7 +68,7 @@
        DISPLAY-BANNER.
            DISPLAY "======================================"
            DISPLAY "   SECURE MORTGAGE CALCULATOR"
-           DISPLAY "   DEFENSING PROGRAMING ENABLED"
+           DISPLAY "   DEFENSING PROGRAMMING ENABLED"
            DISPLAY "======================================"
            DISPLAY " ".
        
